@@ -7,10 +7,7 @@
 //
 
 import UIKit
-import CoreGraphics
-import CoreImage
 import ImageIO
-import MobileCoreServices
 
 class ViewController: UIViewController {
 
