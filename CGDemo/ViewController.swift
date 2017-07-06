@@ -42,9 +42,13 @@ class ViewController: UIViewController {
         
         let UTI = CGImageSourceGetType(imageSource!) // Get the original image's UTI, JPG is 'public.jpeg', RAW is 'com.adobe.raw-image', but I also tried 'public.camera-raw-image' for RAW, which didn't change the result
         print(UTI ?? "UTI is nil")
-        let dest_data = NSMutableData.init()
+        let finalImageData = CFDataCreateMutable(nil, 0)
+        guard finalImageData != nil else {
+            NSLog("***Could not create image data ***");
+            return
+        }
         
-        let destination = CGImageDestinationCreateWithData(dest_data,UTI!,1,nil); // This is where the Problem is, it returns nil when I send a RAW file's UTI in.
+        let destination = CGImageDestinationCreateWithData(finalImageData!,UTI!,1,nil); // This is where the Problem is, it returns nil when I send a RAW file's UTI in.
         guard destination != nil else{
             NSLog("***Could not create image destination ***");
             return
@@ -57,7 +61,8 @@ class ViewController: UIViewController {
         guard success != false else {
             return
         }
-        dest_data.write(to: imageURL, atomically: true)
+        let imageData = finalImageData! as NSData
+        imageData.write(to: imageURL, atomically: true)
     }
 
     override func didReceiveMemoryWarning() {
